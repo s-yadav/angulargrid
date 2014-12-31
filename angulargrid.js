@@ -6,7 +6,8 @@ angular.module('angularGrid').directive('angularGrid', ['$timeout',
         //defaults for plugin
         var defaults = {
                             gridWidth: 250, //minumum width of a grid, this may increase to take whole space of container 
-                            gutterSize: 10 //spacing between two grid
+                            gutterSize: 10, //spacing between two grid
+                            selector : 'li'
                         };
 
         return {
@@ -120,7 +121,7 @@ angular.module('angularGrid').directive('angularGrid', ['$timeout',
                     
                     if (scope.closingView) return;
                     $timeout(function () {
-                        listElms = $element.find('li');
+                        listElms = $element.children(options.selector);
                         reflowGrids();
                     });
                 }, true);
