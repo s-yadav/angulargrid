@@ -1,22 +1,30 @@
-// angulargrid 0.0.1 
+// angulargrid 0.0.2 
 
 //module to create wookmark and pinterest like dynamic grid with angular
-angular.module('angularGrid').directive('angularGrid', ['$timeout', 
-    function ($timeout) {
+angular.module('angularGrid').directive('angularGrid', ['$timeout','$window', 
+    function ($timeout,$window) {
         //defaults for plugin
         var defaults = {
                             gridWidth: 250, //minumum width of a grid, this may increase to take whole space of container 
-                            gutterSize: 10, //spacing between two grid
-                            selector : 'li'
+                            gutterSize: 10 //spacing between two grid
                         };
 
+        var single = (function(){
+            var $elm = angular.element(window);
+            return function(elm){
+                $elm[0] = elm;
+                return $elm;
+            }
+        }());
+        
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
-                var $element = $(element[0]),
-                    win = $(window),
+                var element = element,
+                    domElm = element[0],
+                    win = angular.element($window),
                     modalKey = attrs.wookmark,
-                    modal = scope[modalKey],
+                    modal = scope.$eval(modalKey),
                     listElms,
                     timeoutPromise,
                     cols,
@@ -34,9 +42,7 @@ angular.module('angularGrid').directive('angularGrid', ['$timeout',
 
                 //function to get column width and number of columns
                 function getSetColWidth() {
-                    var contWidth = $element.width();
-
-                    console.log(contWidth);
+                    var contWidth = domElm.offsetWidth;
 
                     cols = Math.floor(contWidth / (options.gridWidth + options.spacing));
 
@@ -70,58 +76,45 @@ angular.module('angularGrid').directive('angularGrid', ['$timeout',
                     var listElmHeights = [];
 
                     //get all list items new height
-                    listElms.each(function () {
-                        var $this = $.single(this),
-                            height;
-                        //if element has expanded class caculate height by its clone
-                        if ($this.hasClass('expanded')) {
-                            var clone = $this.clone();
- //remove form element before finding height                          
-                            clone.removeClass('expanded').find('.note-update-form').remove();
-                            clone.find('.note-wrap').removeClass('hide');
-                            height = clone.insertAfter($this).height();
-                            clone.remove();
-                        } else {
-                            height = $.single(this).height();
-                        }
-                        listElmHeights.push(height);
-                    });
+                    for(var i=0,ln =listElms.length; i++ ){
+                        var item = listElms[i]; 
+                        listElmHeights.push(item.offsetHeight);
+                    }
 
                     $timeout(function () {
                         listElms.removeClass('no-transition');
 
                         //set new positions
 
-                        listElms.each(function (idx) {
-                            var height = listElmHeights[idx],
+                        for(var i=0,ln =listElms.length; i++ ){
+                            var item = listElms[i],
+                                height = listElmHeights[idx],
                                 top = Math.min.apply(Math, lastRowBottom),
                                 col = lastRowBottom.indexOf(top);
-
+                            
                             //update lastRowBottom value
                             lastRowBottom[col] = top + height + options.spacing;
 
                             //set top and left of list items
                             var left = col * (colWidth + options.spacing);
-                            $.single(this).css({
+                            item.css({
                                 height: height + 'px',
                                 top: top + 'px',
                                 left: left + 'px'
-                            });
-
-                        });
+                            });                            
+                        }
 
                         //set the height of container
-                        $element.height(Math.max.apply(Math, lastRowBottom));
+                        element.css('height',Math.max.apply(Math, lastRowBottom)+'px');
 
                     });
                 }
 
                 //watch on modal key
-                scope.$watch(modalKey, function () {
-                    
+                scope.$watch(modalKey, function () {      
                     if (scope.closingView) return;
                     $timeout(function () {
-                        listElms = $element.children(options.selector);
+                        listElms = element.children();
                         reflowGrids();
                     });
                 }, true);
