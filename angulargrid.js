@@ -1,7 +1,7 @@
 // angulargrid 0.0.2 
 
 //module to create wookmark and pinterest like dynamic grid with angular
-angular.module('angularGrid').directive('angularGrid', ['$timeout','$window', 
+angular.module('angularGrid',[]).directive('angularGrid', ['$timeout','$window', 
     function ($timeout,$window) {
         //defaults for plugin
         var defaults = {
