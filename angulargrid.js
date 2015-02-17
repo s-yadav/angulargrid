@@ -39,7 +39,7 @@ angular.module('angularGrid', []).directive('angularGrid', ['$timeout', '$window
                 //get the user input options
                 var options = {};
                 Object.keys(defaults).forEach(function (key) {
-                    options[key] = attrs[key] || defaults[key];
+                    options[key] = attrs[key] ? parseInt(attrs[key]) : defaults[key];
                 });
 
 

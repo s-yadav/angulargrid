@@ -8,21 +8,25 @@
             border: 1px solid #cccccc;
             position: absolute;
             list-style: none;
+            -webkit-box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.3);
+            -moz-box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.3);
+            box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.3);
+            background: #ffffff;
         }
-        .grid-img{
+        .grid-img {
             width: 100%;
+            vertical-align: middle;
         }
-        .grid-img.img-loading{
+        .grid-img.img-loading {
             display: none;
         }
-
     </style>
 </head>
 
 <body class="" data-ng-controller="demo">
-    <ul class="dynamic-grid" angular-grid="pics">
+    <ul class="dynamic-grid" angular-grid="pics" grid-width="250" gutter-size="20">
         <li data-ng-repeat="pic in pics" class="grid">
-            <img src="{{pic.media.m}}" class="grid-img"/>
+            <img src="{{pic.media.m}}" class="grid-img" />
         </li>
     </ul>
 </body>
