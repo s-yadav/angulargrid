@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html ng-app="demoApp">
+
+<head>
+    <title>Angular Grid Demo</title>
+    <style>
+        .grid {
+            border: 1px solid #cccccc;
+            position: absolute;
+            list-style: none;
+        }
+        .grid-img{
+            width: 100%;
+        }
+        .grid-img.img-loading{
+            display: none;
+        }
+
+    </style>
+</head>
+
+<body class="" data-ng-controller="demo">
+    <ul class="dynamic-grid" angular-grid="pics">
+        <li data-ng-repeat="pic in pics" class="grid">
+            <img src="{{pic.media.m}}" class="grid-img"/>
+        </li>
+    </ul>
+</body>
+<script src="js/angular.js"></script>
+<script src="../angulargrid.js"></script>
+<script src="js/demo1.js"></script>
+
+
+</html>
