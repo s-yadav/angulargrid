@@ -6,7 +6,7 @@
     Documentation and download on https://github.com/s-yadav/angulargrid 
 */
 
-/* module to create wookmark and pinterest like dynamic grid with angular */
+/* module to create pinterest like responsive masonry grid system for angular */
 (function (angular, window, undefined) {
     //defaults for plugin
     var defaults = {

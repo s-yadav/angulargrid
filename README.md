@@ -1,7 +1,7 @@
 angulargrid
 ===========
 
-Pin-interest and wookmark like responsive dynamic grid system for angular
+Pinterest like responsive masonry grid system for angular
 
 Demo url : http://ignitersworld.com/lab/angulargrid/demo1.html
 
