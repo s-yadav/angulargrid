@@ -102,26 +102,26 @@ angular.module('demoApp', ['angularGrid'])
     }]);
 ```
 
-#Options
-gridWidth : (Default to 250) minimum width in pixel a coloumn can have, coloumn width will increase above grid width depending on container size to make grids responsive.
+##Options (attributes)
+**grid-width** : (Default to 250) minimum width in pixel a coloumn can have, coloumn width will increase above grid width depending on container size to make grids responsive.
 
-gutterSize : (Default to 10) Spacing between two column
+**gutter-size** : (Default to 10) Spacing between two column
 
-refreshOnImgLoad : (Default to true) refresh the layout on image load so images does not overlap each other 
+**refresh-on-img-load** : (Default to true) refresh the layout on image load so images does not overlap each other 
 
-#Handeling Images
+##Handeling Images
 If your list contains any image inside, as it will load asynchronously, plugin refresh the layout and add following classes to list item and images, so you can handle transitions of image better,
 
-images : 
+**images :** 
 image-loading : when an image is loading inside list item
 image-loaded : when an image is loaded inside list item
 
-list item
+**list item :**
 image-loading : when any of image is loading inside list item
 image-loaded : when all images are loaded inside list item
 
 Optionally if you know dimension of images you can add data-actual-width and data-actual-height attributes, so that it will not refresh the layout when those images are loaded.
 
-#refreshing manually
+##Refreshing manually
 To get the refrence of instance you need to define angular-grid-id on the element which you can get back by injecting angularGridInstance to any controller or directive. 
 Using your id you can refresh your layout ex : angularGridInstance.gallery.refresh();
