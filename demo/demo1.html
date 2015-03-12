@@ -4,29 +4,48 @@
 <head>
     <title>Angular Grid Demo</title>
     <style>
+
+        .dynamic-grid{
+            position: relative;
+            display: none;
+        }
+        
+        .dynamic-grid.angular-grid{
+            display: block;
+        }
+        
         .grid {
             border: 1px solid #cccccc;
             position: absolute;
             list-style: none;
-            -webkit-box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.3);
-            -moz-box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.3);
-            box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.3);
             background: #ffffff;
+            box-sizing: border-box;
+            -moz-box-sizing : border-box;
+            -webkit-transition: all 0.6s ease-out; 
+            transition: all 0.6s ease-out; 
+            overflow: hidden;
         }
         .grid-img {
             width: 100%;
             vertical-align: middle;
+            -webkit-transition: opacity 0.6s ease-out;  
+            transition: opacity 0.6s ease-out;
+            background-color: #fff;
+            opacity: 0; 
+            visibility: hidden;
         }
-        .grid-img.img-loading {
-            display: none;
+
+        .grid-img.img-loaded{
+            visibility: visible;
+            opacity: 1;
         }
     </style>
 </head>
 
 <body class="" data-ng-controller="demo">
-    <ul class="dynamic-grid" angular-grid="pics" grid-width="250" gutter-size="20">
-        <li data-ng-repeat="pic in pics" class="grid">
-            <img src="{{pic.media.m}}" class="grid-img" />
+    <ul class="dynamic-grid" angular-grid="pics" grid-width="300" gutter-size="10" angular-grid-id="gallery" refresh-on-img-load="false" >
+        <li data-ng-repeat="pic in pics" class="grid" data-ng-clock>
+            <img src="{{pic.media.m}}" class="grid-img" data-actual-width = "{{pic.actualWidth}}"  data-actual-height="{{pic.actualHeight}}" />
         </li>
     </ul>
 </body>
