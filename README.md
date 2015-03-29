@@ -3,7 +3,7 @@ angulargrid
 
 Pinterest like responsive masonry grid system for angular
 
-Demo url : http://ignitersworld.com/lab/angulargrid/demo1.html
+Demo url : http://ignitersworld.com/lab/angulargrid/index.html#demo
 
 ##Usage
 1. Include angulargrid.js
