@@ -1,5 +1,5 @@
 /*
-    angularGrid.js v 0.1.0
+    angularGrid.js v 0.1.1
     Author: Sudhanshu Yadav
     Copyright (c) 2013 Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
     Demo on: http://ignitersworld.com/lab/angulargrid/demo1.html
@@ -7,7 +7,7 @@
 */
 
 /* module to create pinterest like responsive masonry grid system for angular */
-(function (angular, window, undefined) {
+;(function (angular, window, undefined) {
     //defaults for plugin
     var defaults = {
         gridWidth: 300, //minumum width of a grid, this may increase to take whole space of container 
@@ -35,9 +35,9 @@
 
     //add required css
     angular.element(document.head).append('<style>' +
-        '.no-transition{' +
+        '.ag-no-transition{' +
         '-webkit-transition: none !important;' +
-        'transition: none !important;' +
+        'transition: none !important; visibility:hidden; opacity:0;' +
         '}' + '</style>');
 
     angular.module('angularGrid', []).directive('angularGrid', ['$timeout', '$window', '$q', 'angularGridInstance',
@@ -86,24 +86,24 @@
                         for (var i = 0; i < cols; i++) {
                             lastRowBottom.push(0);
                         }
+
+                        return colWidth;
                     }
 
 
                     //function to reflow grids
                     function reflowGrids() {
-                        console.log('reflowed');
                         //remove transition
-                        listElms.addClass('no-transition');
 
                         //claclulate and set width of all element
-                        getSetColWidth();
+                        var colWidth = getSetColWidth();
 
                         //if image actual width and actual height is defined update image size so that it dosent cause reflow on image load
                         domToAry(listElms.find('img')).forEach(function (img) {
                             var $img = angular.element(img);
 
                             //if image is already loaded don't do anything
-                            if ($img.hasClass('loaded')) {
+                            if ($img.hasClass('img-loaded')) {
                                 $img.css('height', '');
                                 return;
                             }
@@ -122,12 +122,20 @@
                         var listElmHeights = [];
 
                         //get all list items new height
+                        var item, $item, clone, listHeight;
                         for (var i = 0, ln = listElms.length; i < ln; i++) {
-                            var item = listElms[i];
-                            listElmHeights.push(item.offsetHeight);
-                        }
+                            item = listElms[i];
+                            $item = single(item);
 
-                        listElms.removeClass('no-transition');
+                            //create clone of item to calculate proper height
+                            clone = $item.clone();
+                            clone.addClass('ag-no-transition');
+                            clone.css('width', colWidth + 'px');
+                            $item.after(clone);
+
+                            listElmHeights.push(clone[0].offsetHeight);
+                            clone.remove();
+                        }
 
                         //set new positions
 
@@ -223,7 +231,7 @@
 
                     //listen window resize event and reflow grids after a timeout
                     win.on('resize', function () {
-                        console.log('resized');
+
                         if (timeoutPromise) $timeout.cancel(timeoutPromise);
 
                         timeoutPromise = $timeout(function () {
