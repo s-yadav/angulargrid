@@ -1,7 +1,7 @@
 /*
-    angularGrid.js v 0.1.1
+    angularGrid.js v 0.1.2
     Author: Sudhanshu Yadav
-    Copyright (c) 2013 Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
+    Copyright (c) 2015 Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
     Demo on: http://ignitersworld.com/lab/angulargrid/demo1.html
     Documentation and download on https://github.com/s-yadav/angulargrid 
 */
@@ -20,7 +20,7 @@
         return function (elm) {
             $elm[0] = elm;
             return $elm;
-        }
+        };
     }());
 
     //function to check if image is loaded
@@ -45,12 +45,10 @@
             return {
                 restrict: 'A',
                 link: function (scope, element, attrs) {
-                    var element = element,
-                        domElm = element[0],
+                    var domElm = element[0],
                         win = angular.element($window),
                         agId = attrs.angularGridId,
                         modalKey = attrs.angularGrid,
-                        modal = scope.$eval(modalKey),
                         listElms,
                         timeoutPromise,
                         cols,
@@ -96,7 +94,8 @@
                         //remove transition
 
                         //claclulate and set width of all element
-                        var colWidth = getSetColWidth();
+                        var colWidth = getSetColWidth(),
+                            i, ln;
 
                         //if image actual width and actual height is defined update image size so that it dosent cause reflow on image load
                         domToAry(listElms.find('img')).forEach(function (img) {
@@ -122,8 +121,8 @@
                         var listElmHeights = [];
 
                         //get all list items new height
-                        var item, $item, clone, listHeight;
-                        for (var i = 0, ln = listElms.length; i < ln; i++) {
+                        var item, $item, clone;
+                        for (i = 0, ln = listElms.length; i < ln; i++) {
                             item = listElms[i];
                             $item = single(item);
 
@@ -139,9 +138,9 @@
 
                         //set new positions
 
-                        for (var i = 0, ln = listElms.length; i < ln; i++) {
-                            var item = single(listElms[i]),
-                                height = listElmHeights[i],
+                        for (i = 0, ln = listElms.length; i < ln; i++) {
+                            item = single(listElms[i]);
+                            var height = listElmHeights[i],
                                 top = Math.min.apply(Math, lastRowBottom),
                                 col = lastRowBottom.indexOf(top);
 
@@ -242,16 +241,16 @@
                     //add instance to factory if id is assigned
                     if (agId) angularGridInstance[agId] = {
                         refresh: reflowGrids
-                    }
+                    };
                 }
-            }
+            };
 }])
-    //a factory to store radial indicators instances which can be injected to controllers or directive to get any indicators instance
+    //a factory to store angulargrid instances which can be injected to controllers or directive
     .factory('angularGridInstance', function () {
 
         var angularGridInstance = {};
 
         return angularGridInstance;
 
-    });;
+    });
 }(angular, window));
