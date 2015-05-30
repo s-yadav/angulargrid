@@ -8,6 +8,7 @@
 
 /* module to create pinterest like responsive masonry grid system for angular */
 ;(function (angular, window, undefined) {
+    "use strict";
     //defaults for plugin
     var defaults = {
         gridWidth: 300, //minumum width of a grid, this may increase to take whole space of container 
@@ -25,7 +26,7 @@
 
     //function to check if image is loaded
     function imageLoaded(img) {
-        return img.complete && (typeof img.naturalWidth === "undefined" || img.naturalWidth !== 0);
+        return img.complete && (typeof img.naturalWidth === 'undefined' || img.naturalWidth !== 0);
     }
 
     //function to covert domlist to array
@@ -59,7 +60,7 @@
                     var options = {
                         gridWidth: attrs.gridWidth ? parseInt(attrs.gridWidth) : defaults.gridWidth,
                         gutterSize: attrs.gutterSize ? parseInt(attrs.gutterSize) : defaults.gutterSize,
-                        refreshOnImgLoad: attrs.refreshOnImgLoad == "false" ? false : true
+                        refreshOnImgLoad: attrs.refreshOnImgLoad == 'false' ? false : true
                     };
 
 
@@ -169,7 +170,9 @@
                                 allImg = $listItem.find('img'),
                                 loadedImgPromises = [];
 
-                            if (!allImg.length) return;
+                            if (!allImg.length) {
+                                return;
+                            }
 
                             //add image loading class on list item
                             $listItem.addClass('img-loading');
@@ -231,7 +234,9 @@
                     //listen window resize event and reflow grids after a timeout
                     win.on('resize', function () {
 
-                        if (timeoutPromise) $timeout.cancel(timeoutPromise);
+                        if (timeoutPromise) {
+                            $timeout.cancel(timeoutPromise);
+                        }
 
                         timeoutPromise = $timeout(function () {
                             reflowGrids();
@@ -239,9 +244,11 @@
                     });
 
                     //add instance to factory if id is assigned
-                    if (agId) angularGridInstance[agId] = {
-                        refresh: reflowGrids
-                    };
+                    if (agId) {
+                        angularGridInstance[agId] = {
+                            refresh: reflowGrids
+                        };
+                    }
                 }
             };
 }])
