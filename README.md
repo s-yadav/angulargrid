@@ -101,7 +101,7 @@ angular.module('demoApp', ['angularGrid'])
         });;
     }]);
 ```
-#Animating on enter or leave of any item.
+##Animating on enter or leave of any item.
 Angulargrid rely on ngAnimate module for smooth transition on enter or leave of any item. It only support css animation of ngAnimate for now
 
 Add ngAnimate module to your app.
