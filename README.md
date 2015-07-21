@@ -101,6 +101,69 @@ angular.module('demoApp', ['angularGrid'])
         });;
     }]);
 ```
+#Animating on enter or leave of any item.
+Angulargrid rely on ngAnimate module for smooth transition on enter or leave of any item. It only support css animation of ngAnimate for now
+
+Add ngAnimate module to your app.
+```js
+    var App = angular.module('demoApp', ['angularGrid','ngAnimate']);
+```
+and then following css can be used to add transition on above example.
+```css
+        .dynamic-grid {
+          position: relative;
+          display: none;
+        }
+        .dynamic-grid.angular-grid {
+          display: block;
+        }
+        .grid {
+          position: absolute;
+          list-style: none;
+          background: #ffffff;;
+          box-sizing: border-box;
+          -webkit-transition: all 400ms ease;
+          transition: all 400ms ease;
+          overflow: hidden;
+          border-radius: 10px;
+        }
+        .grid.ng-leave {
+          -webkit-transition: all ease 400ms;
+          transition: all ease 400ms;
+        }
+        .grid.ng-leave.ng-leave-active {
+          -webkit-transform: scale(0.5);
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        .grid.ng-enter {
+          -webkit-transition: all ease 400ms;
+          transition: all ease 400ms;
+          -webkit-transition-delay: 500ms;
+          transition-delay: 500ms;
+          -webkit-transform: scale(0.5);
+           transform: scale(0.5);
+          opacity: 0;
+        }
+        .grid.ng-enter.ng-enter-active {
+          -webkit-transform: scale(1);
+          transform: scale(1);
+          opacity: 1;
+        }
+        .grid-img {
+          width: 100%;
+          vertical-align: middle;
+          -webkit-transition: opacity 0.6s ease-out;
+           transition: opacity 0.6s ease-out;
+          background-color: #fff;
+          opacity: 0;
+          visibility: hidden;
+        }
+        .grid-img.img-loaded {
+          visibility: visible;
+          opacity: 1;
+        }
+```
 
 ##Options (attributes)
 **grid-width** : (Default to 250) minimum width in pixel a coloumn can have, coloumn width will increase above grid width depending on container size to make grids responsive.

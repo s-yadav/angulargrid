@@ -1,5 +1,5 @@
 /*
-    angularGrid.js v 0.1.2
+    angularGrid.js v 0.2.0
     Author: Sudhanshu Yadav
     Copyright (c) 2015 Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
     Demo on: http://ignitersworld.com/lab/angulargrid/demo1.html
@@ -138,7 +138,6 @@
                         }
 
                         //set new positions
-
                         for (i = 0, ln = listElms.length; i < ln; i++) {
                             item = single(listElms[i]);
                             var height = listElmHeights[i],
@@ -212,28 +211,47 @@
                         });
 
                     }
+                    
+                    //function to check for ng animation
+                    function ngCheckAnim(){
+                        var leavingElm = domToAry(listElms).filter(function(elm){
+                            return single(elm).hasClass('ng-leave');
+                        });
+                        return $q(function(resolve){
+                            if(!leavingElm.length){
+                                resolve();
+                            }else{
+                                single(leavingElm[0]).one('webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd',function(){
+                                    $timeout(function () {
+                                        listElms = element.children();
+                                        resolve();
+                                      });
+                                });
+                            }
+                        });
+                    }
 
                     //watch on modal key
                     scope.$watch(modalKey, function () {
                         $timeout(function () {
                             listElms = element.children();
-                            reflowGrids();
-                            //handle images
-                            handleImage();
+                            ngCheckAnim().then(function(){
+                                //handle images
+                                handleImage();
 
-                            $timeout(function () {
-                                //add class to element
-                                element.addClass('angular-grid');
+                                $timeout(function () {
+                                    //add class to element
+                                    element.addClass('angular-grid');
 
-                                //to handle scroll appearance
-                                reflowGrids();
+                                    //to handle scroll appearance
+                                    reflowGrids();
+                                });
                             });
                         });
                     }, true);
 
                     //listen window resize event and reflow grids after a timeout
                     win.on('resize', function () {
-
                         if (timeoutPromise) {
                             $timeout.cancel(timeoutPromise);
                         }
