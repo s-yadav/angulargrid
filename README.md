@@ -153,8 +153,6 @@ and then following css can be used to add transition on above example.
         .grid-img {
           width: 100%;
           vertical-align: middle;
-          -webkit-transition: opacity 0.6s ease-out;
-           transition: opacity 0.6s ease-out;
           background-color: #fff;
           opacity: 0;
           visibility: hidden;
