@@ -1,5 +1,5 @@
 /*
-    angularGrid.js v 0.2.0
+    angularGrid.js v 0.3.0
     Author: Sudhanshu Yadav
     Copyright (c) 2015 Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
     Demo on: http://ignitersworld.com/lab/angulargrid/demo1.html
@@ -7,7 +7,7 @@
 */
 
 /* module to create pinterest like responsive masonry grid system for angular */
-;(function (angular, window, undefined) {
+;(function(angular, window, undefined) {
     "use strict";
     //defaults for plugin
     var defaults = {
@@ -16,9 +16,9 @@
         refreshOnImgLoad: true // to make a refresh on image load inside container
     };
 
-    var single = (function () {
+    var single = (function() {
         var $elm = angular.element(window);
-        return function (elm) {
+        return function(elm) {
             $elm[0] = elm;
             return $elm;
         };
@@ -42,19 +42,17 @@
         '}' + '</style>');
 
     angular.module('angularGrid', []).directive('angularGrid', ['$timeout', '$window', '$q', 'angularGridInstance',
-    function ($timeout, $window, $q, angularGridInstance) {
+        function($timeout, $window, $q, angularGridInstance) {
             return {
                 restrict: 'A',
-                link: function (scope, element, attrs) {
-                    var domElm = element[0],
+                link: function(scope, element, attrs) {
+                    var initiallyLoaded,
+                        domElm = element[0],
                         win = angular.element($window),
                         agId = attrs.angularGridId,
                         modalKey = attrs.angularGrid,
                         listElms,
-                        timeoutPromise,
-                        cols,
-                        lastRowBottom = [], //A container to store last rows bottom values
-                        colWidth;
+                        timeoutPromise;
 
                     //get the user input options
                     var options = {
@@ -65,106 +63,153 @@
 
 
                     //function to get column width and number of columns
-                    function getSetColWidth() {
+                    function getColWidth() {
                         var contWidth = domElm.offsetWidth;
 
-                        cols = Math.floor(contWidth / (options.gridWidth + options.gutterSize));
+                        var cols = Math.floor(contWidth / (options.gridWidth + options.gutterSize));
 
                         var remainingSpace = (contWidth % (options.gridWidth + options.gutterSize)) + options.gutterSize;
 
-                        colWidth = options.gridWidth + Math.floor(remainingSpace / cols);
+                        var colWidth = options.gridWidth + Math.floor(remainingSpace / cols);
 
-                        //set width of each list
-                        listElms.css({
-                            width: colWidth + 'px',
-                            height: 'auto'
+                        return {
+                            no: cols,
+                            width: colWidth
+                        };
+                    }
+
+                    //method check for image loaded inside a container and trigger callback
+                    function afterImageLoad(container, options) {
+                        var beforeLoad = options.beforeLoad || angular.noop,
+                            onLoad = options.onLoad || angular.noop,
+                            isLoaded = options.isLoaded || angular.noop,
+                            onFullLoad = options.onFullLoad || angular.noop,
+                            ignoreCheck = options.ignoreCheck || angular.noop,
+                            allImg = container.find('img'),
+                            loadedImgPromises = [];
+
+                        domToAry(allImg).forEach(function(img) {
+                            beforeLoad(img);
+                            if (!imageLoaded(img) && !ignoreCheck(img)) {
+                                loadedImgPromises.push($q(function(resolve, reject) {
+                                    img.onload = function() {
+                                        onLoad(img);
+                                        resolve();
+                                    };
+                                    img.onerror = reject;
+                                }));
+                            } else {
+                                isLoaded(img);
+                            }
                         });
 
-                        //initialize listRowBottom
-                        lastRowBottom.length = 0;
-                        for (var i = 0; i < cols; i++) {
-                            lastRowBottom.push(0);
+                        if (loadedImgPromises.length) {
+                            $q.all(loadedImgPromises).then(onFullLoad, onFullLoad);
+                        } else {
+                            onFullLoad();
                         }
-
-                        return colWidth;
                     }
 
 
                     //function to reflow grids
                     function reflowGrids() {
-                        //remove transition
-
-                        //claclulate and set width of all element
-                        var colWidth = getSetColWidth(),
+                        //claclulate width of all element
+                        var colInfo = getColWidth(),
+                            colWidth = colInfo.width,
+                            cols = colInfo.no,
                             i, ln;
 
+                        //initialize listRowBottom
+                        var lastRowBottom = [];
+                        for (var i = 0; i < cols; i++) {
+                            lastRowBottom.push(0);
+                        }
+
                         //if image actual width and actual height is defined update image size so that it dosent cause reflow on image load
-                        domToAry(listElms.find('img')).forEach(function (img) {
-                            var $img = angular.element(img);
+                        domToAry(listElms).forEach(function(item) {
+                            var $item = single(item);
 
-                            //if image is already loaded don't do anything
-                            if ($img.hasClass('img-loaded')) {
-                                $img.css('height', '');
-                                return;
-                            }
+                            domToAry($item.find('img')).forEach(function(img) {
+                                var $img = $item.find('img');
+                                //if image is already loaded don't do anything
+                                if ($img.hasClass('img-loaded')) {
+                                    $img.css('height', '');
+                                    return;
+                                }
+                                
+                                //set the item width so image width can be calculated properly
+                                $item.css('width', colWidth + 'px');
 
-                            var actualWidth = $img.attr('actual-width') || $img.attr('data-actual-width'),
-                                actualHeight = $img.attr('actual-height') || $img.attr('data-actual-height'),
-                                curWidth;
+                                var actualWidth = $img.attr('actual-width') || $img.attr('data-actual-width'),
+                                    actualHeight = $img.attr('actual-height') || $img.attr('data-actual-height');
 
-                            if (actualWidth && actualHeight) {
-                                curWidth = img.width;
-                                height = actualHeight * curWidth / actualWidth;
-                                $img.css('height', height + 'px');
-                            }
+                                if (actualWidth && actualHeight) {
+                                    $img.css('height', (actualHeight * img.width / actualWidth) + 'px');
+                                }
+                            });
                         });
 
-                        var listElmHeights = [];
-
                         //get all list items new height
-                        var item, $item, clone;
-                        for (i = 0, ln = listElms.length; i < ln; i++) {
-                            item = listElms[i];
-                            $item = single(item);
+                        var clones = listElms.clone();
 
-                            //create clone of item to calculate proper height
-                            clone = $item.clone();
-                            clone.addClass('ag-no-transition');
-                            clone.css('width', colWidth + 'px');
-                            $item.after(clone);
+                        clones.addClass('ag-no-transition');
+                        clones.css({
+                            visibility: 'hidden',
+                            opacity: 0,
+                            width: colWidth + 'px',
+                            top: 0,
+                            left: 0
+                        });
+                        element.append(clones);
 
-                            listElmHeights.push(clone[0].offsetHeight);
-                            clone.remove();
-                        }
+                        //For cloned element again we have to check if image loaded (IOS only)
 
-                        //set new positions
-                        for (i = 0, ln = listElms.length; i < ln; i++) {
-                            item = single(listElms[i]);
-                            var height = listElmHeights[i],
-                                top = Math.min.apply(Math, lastRowBottom),
-                                col = lastRowBottom.indexOf(top);
+                        afterImageLoad(clones, {
+                            ignoreCheck: function(img) {
+                                return !single(img).hasClass('img-loaded');
+                            },
+                            onFullLoad: function() {
+                                var listElmHeights = [],
+                                    item, i, ln;
+                                //find height with clones
+                                for (i = 0, ln = clones.length; i < ln; i++) {
+                                    listElmHeights.push(clones[i].offsetHeight);
+                                }
 
-                            //update lastRowBottom value
-                            lastRowBottom[col] = top + height + options.gutterSize;
+                                //set new positions
+                                for (i = 0, ln = listElms.length; i < ln; i++) {
+                                    item = single(listElms[i]);
+                                    var height = listElmHeights[i],
+                                        top = Math.min.apply(Math, lastRowBottom),
+                                        col = lastRowBottom.indexOf(top);
 
-                            //set top and left of list items
-                            var left = col * (colWidth + options.gutterSize);
+                                    //update lastRowBottom value
+                                    lastRowBottom[col] = top + height + options.gutterSize;
 
-                            item.css({
-                                top: top + 'px',
-                                left: left + 'px'
-                            });
-                        }
+                                    //set top and left of list items
+                                    var left = col * (colWidth + options.gutterSize);
 
 
-                        //set the height of container
-                        element.css('height', Math.max.apply(Math, lastRowBottom) + 'px');
+                                    item.css({
+                                        top: top + 'px',
+                                        left: left + 'px',
+                                        width: colWidth + 'px'
+                                    });
+                                }
+
+                                //set the height of container
+                                element.css('height', Math.max.apply(Math, lastRowBottom) + 'px');
+
+                                clones.remove();
+                            }
+                        });
                     }
+
 
                     //function to handle asynchronous image loading
                     function handleImage() {
                         var reflowPending = false;
-                        domToAry(listElms).forEach(function (listItem) {
+                        domToAry(listElms).forEach(function(listItem) {
                             var $listItem = angular.element(listItem),
                                 allImg = $listItem.find('img'),
                                 loadedImgPromises = [];
@@ -176,87 +221,84 @@
                             //add image loading class on list item
                             $listItem.addClass('img-loading');
 
-                            domToAry(allImg).forEach(function (img) {
-                                var $img = angular.element(img);
-                                if (!imageLoaded(img)) {
-                                    loadedImgPromises.push($q(function (resolve, reject) {
-                                        $img.addClass('img-loading');
-                                        img.onload = function () {
-                                            if (!reflowPending && options.refreshOnImgLoad) {
-                                                reflowPending = true;
-                                                $timeout(function () {
-                                                    reflowGrids();
-                                                    reflowPending = false;
-                                                }, 100);
-                                            }
-                                            $img.removeClass('img-loading').addClass('img-loaded');
-                                            resolve();
-                                        };
-                                        img.onerror = reject;
-                                    }));
-                                } else {
-                                    $img.addClass('img-loaded');
+                            afterImageLoad($listItem, {
+                                beforeLoad: function(img) {
+                                    single(img).addClass('img-loading');
+                                },
+                                isLoaded: function(img) {
+                                    single(img).removeClass('img-loading').addClass('img-loaded');
+                                },
+                                onLoad: function(img) {
+                                    if (!reflowPending && options.refreshOnImgLoad) {
+                                        reflowPending = true;
+                                        $timeout(function() {
+                                            reflowGrids();
+                                            reflowPending = false;
+                                        }, 100);
+                                    }
+                                    single(img).removeClass('img-loading').addClass('img-loaded');
+                                },
+                                onFullLoad: function() {
+                                    $listItem.removeClass('img-loading').addClass('img-loaded');
                                 }
                             });
-
-                            if (loadedImgPromises.length) {
-                                $q.all(loadedImgPromises).then(function () {
-                                    $listItem.removeClass('img-loading').addClass('img-loaded');
-                                }, function () {
-                                    $listItem.removeClass('img-loading').addClass('img-loaded');
-                                });
-                            } else {
-                                $listItem.removeClass('img-loading').addClass('img-loaded');
-                            }
                         });
 
                     }
-                    
+
                     //function to check for ng animation
-                    function ngCheckAnim(){
-                        var leavingElm = domToAry(listElms).filter(function(elm){
+                    function ngCheckAnim() {
+                        var leavingElm = domToAry(listElms).filter(function(elm) {
                             return single(elm).hasClass('ng-leave');
                         });
-                        return $q(function(resolve){
-                            if(!leavingElm.length){
+                        return $q(function(resolve) {
+                            if (!leavingElm.length) {
                                 resolve();
-                            }else{
-                                single(leavingElm[0]).one('webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd',function(){
-                                    $timeout(function () {
+                            } else {
+                                single(leavingElm[0]).one('webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd', function() {
+                                    $timeout(function() {
                                         listElms = element.children();
                                         resolve();
-                                      });
+                                    });
                                 });
                             }
                         });
                     }
 
                     //watch on modal key
-                    scope.$watch(modalKey, function () {
-                        $timeout(function () {
+                    scope.$watch(modalKey, function() {
+                        $timeout(function() {
                             listElms = element.children();
-                            ngCheckAnim().then(function(){
+                            ngCheckAnim().then(function() {
                                 //handle images
                                 handleImage();
 
-                                $timeout(function () {
+                                $timeout(function() {
                                     //add class to element
                                     element.addClass('angular-grid');
 
                                     //to handle scroll appearance
                                     reflowGrids();
+
+                                    //element.addClass('angular-grid-initilized');
                                 });
                             });
                         });
                     }, true);
 
                     //listen window resize event and reflow grids after a timeout
-                    win.on('resize', function () {
+                    var lastDomWidth = domElm.offsetWidth;
+                    win.on('resize', function() {
+                        var contWidth = domElm.offsetWidth;
+                        if (lastDomWidth == contWidth) return;
+                        lastDomWidth = contWidth;
+
+
                         if (timeoutPromise) {
                             $timeout.cancel(timeoutPromise);
                         }
 
-                        timeoutPromise = $timeout(function () {
+                        timeoutPromise = $timeout(function() {
                             reflowGrids();
                         }, 100);
                     });
@@ -269,13 +311,15 @@
                     }
                 }
             };
-}])
+        }
+    ])
     //a factory to store angulargrid instances which can be injected to controllers or directive
-    .factory('angularGridInstance', function () {
+    .factory('angularGridInstance', function() {
 
         var angularGridInstance = {};
 
         return angularGridInstance;
 
     });
+
 }(angular, window));
