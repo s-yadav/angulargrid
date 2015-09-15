@@ -1,5 +1,5 @@
 /*
-    angularGrid.js v 0.3.2
+    angularGrid.js v 0.3.3
     Author: Sudhanshu Yadav
     Copyright (c) 2015 Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
     Demo on: http://ignitersworld.com/lab/angulargrid/demo1.html
@@ -38,7 +38,7 @@
     angular.element(document.head).append('<style>' +
         '.ag-no-transition{' +
         '-webkit-transition: none !important;' +
-        'transition: none !important; visibility:hidden; opacity:0;' +
+        'transition: none !important;' +
         '}' + '</style>');
 
     angular.module('angularGrid', []).directive('angularGrid', ['$timeout', '$window', '$q', 'angularGridInstance',
@@ -106,7 +106,9 @@
                         if (loadedImgPromises.length) {
                             $q.all(loadedImgPromises).then(onFullLoad, onFullLoad);
                         } else {
-                            onFullLoad();
+                            setTimeout(function() {
+                                onFullLoad();
+                            }, 0);
                         }
                     }
 
@@ -136,8 +138,9 @@
                                     $img.css('height', '');
                                     return;
                                 }
-                                
-                                //set the item width so image width can be calculated properly
+
+                                //set the item width and no transition state so image width can be calculated properly
+                                $item.addClass('ag-no-transition');
                                 $item.css('width', colWidth + 'px');
 
                                 var actualWidth = $img.attr('actual-width') || $img.attr('data-actual-width'),
@@ -146,7 +149,9 @@
                                 if (actualWidth && actualHeight) {
                                     $img.css('height', (actualHeight * img.width / actualWidth) + 'px');
                                 }
+
                             });
+                            $item.removeClass('ag-no-transition');
                         });
 
                         //get all list items new height
