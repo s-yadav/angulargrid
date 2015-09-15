@@ -1,5 +1,5 @@
 /*
-    angularGrid.js v 0.3.1
+    angularGrid.js v 0.3.2
     Author: Sudhanshu Yadav
     Copyright (c) 2015 Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
     Demo on: http://ignitersworld.com/lab/angulargrid/demo1.html
@@ -130,7 +130,7 @@
                             var $item = single(item);
 
                             domToAry($item.find('img')).forEach(function(img) {
-                                var $img = $(img);
+                                var $img = angular.element(img);
                                 //if image is already loaded don't do anything
                                 if ($img.hasClass('img-loaded')) {
                                     $img.css('height', '');
