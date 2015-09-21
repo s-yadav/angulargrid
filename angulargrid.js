@@ -1,5 +1,5 @@
 /*
-    angularGrid.js v 0.3.3
+    angularGrid.js v 0.3.4
     Author: Sudhanshu Yadav
     Copyright (c) 2015 Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
     Demo on: http://ignitersworld.com/lab/angulargrid/demo1.html
@@ -7,7 +7,7 @@
 */
 
 /* module to create pinterest like responsive masonry grid system for angular */
-;(function(angular, window, undefined) {
+;(function (angular, window, undefined) {
     "use strict";
     //defaults for plugin
     var defaults = {
@@ -16,9 +16,9 @@
         refreshOnImgLoad: true // to make a refresh on image load inside container
     };
 
-    var single = (function() {
+    var single = (function () {
         var $elm = angular.element(window);
-        return function(elm) {
+        return function (elm) {
             $elm[0] = elm;
             return $elm;
         };
@@ -39,20 +39,24 @@
         '.ag-no-transition{' +
         '-webkit-transition: none !important;' +
         'transition: none !important;' +
-        '}' + '</style>');
+        '} ' +
+        '.angular-grid{position : relative;} ' +
+        '.angular-grid > *{opacity : 0} ' +
+        '.angular-grid > .angular-grid-item{opacity : 1}' + '</style>');
 
     angular.module('angularGrid', []).directive('angularGrid', ['$timeout', '$window', '$q', 'angularGridInstance',
-        function($timeout, $window, $q, angularGridInstance) {
+        function ($timeout, $window, $q, angularGridInstance) {
             return {
                 restrict: 'A',
-                link: function(scope, element, attrs) {
-                    var initiallyLoaded,
-                        domElm = element[0],
+                link: function (scope, element, attrs) {
+                    var domElm = element[0],
                         win = angular.element($window),
                         agId = attrs.angularGridId,
                         modalKey = attrs.angularGrid,
                         listElms,
                         timeoutPromise;
+
+                    element.addClass('angular-grid');
 
                     //get the user input options
                     var options = {
@@ -88,11 +92,11 @@
                             allImg = container.find('img'),
                             loadedImgPromises = [];
 
-                        domToAry(allImg).forEach(function(img) {
+                        domToAry(allImg).forEach(function (img) {
                             beforeLoad(img);
                             if (!imageLoaded(img) && !ignoreCheck(img)) {
-                                loadedImgPromises.push($q(function(resolve, reject) {
-                                    img.onload = function() {
+                                loadedImgPromises.push($q(function (resolve, reject) {
+                                    img.onload = function () {
                                         onLoad(img);
                                         resolve();
                                     };
@@ -106,7 +110,7 @@
                         if (loadedImgPromises.length) {
                             $q.all(loadedImgPromises).then(onFullLoad, onFullLoad);
                         } else {
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 onFullLoad();
                             }, 0);
                         }
@@ -119,19 +123,19 @@
                         var colInfo = getColWidth(),
                             colWidth = colInfo.width,
                             cols = colInfo.no,
-                            i, ln;
+                            i;
 
                         //initialize listRowBottom
                         var lastRowBottom = [];
-                        for (var i = 0; i < cols; i++) {
+                        for (i = 0; i < cols; i++) {
                             lastRowBottom.push(0);
                         }
 
                         //if image actual width and actual height is defined update image size so that it dosent cause reflow on image load
-                        domToAry(listElms).forEach(function(item) {
+                        domToAry(listElms).forEach(function (item) {
                             var $item = single(item);
 
-                            domToAry($item.find('img')).forEach(function(img) {
+                            domToAry($item.find('img')).forEach(function (img) {
                                 var $img = angular.element(img);
                                 //if image is already loaded don't do anything
                                 if ($img.hasClass('img-loaded')) {
@@ -170,10 +174,10 @@
                         //For cloned element again we have to check if image loaded (IOS only)
 
                         afterImageLoad(clones, {
-                            ignoreCheck: function(img) {
+                            ignoreCheck: function (img) {
                                 return !single(img).hasClass('img-loaded');
                             },
-                            onFullLoad: function() {
+                            onFullLoad: function () {
                                 var listElmHeights = [],
                                     item, i, ln;
                                 //find height with clones
@@ -196,10 +200,11 @@
 
 
                                     item.css({
+                                        position: 'absolute',
                                         top: top + 'px',
                                         left: left + 'px',
                                         width: colWidth + 'px'
-                                    });
+                                    }).addClass('angular-grid-item');
                                 }
 
                                 //set the height of container
@@ -214,10 +219,9 @@
                     //function to handle asynchronous image loading
                     function handleImage() {
                         var reflowPending = false;
-                        domToAry(listElms).forEach(function(listItem) {
+                        domToAry(listElms).forEach(function (listItem) {
                             var $listItem = angular.element(listItem),
-                                allImg = $listItem.find('img'),
-                                loadedImgPromises = [];
+                                allImg = $listItem.find('img');
 
                             if (!allImg.length) {
                                 return;
@@ -227,23 +231,23 @@
                             $listItem.addClass('img-loading');
 
                             afterImageLoad($listItem, {
-                                beforeLoad: function(img) {
+                                beforeLoad: function (img) {
                                     single(img).addClass('img-loading');
                                 },
-                                isLoaded: function(img) {
+                                isLoaded: function (img) {
                                     single(img).removeClass('img-loading').addClass('img-loaded');
                                 },
-                                onLoad: function(img) {
+                                onLoad: function (img) {
                                     if (!reflowPending && options.refreshOnImgLoad) {
                                         reflowPending = true;
-                                        $timeout(function() {
+                                        $timeout(function () {
                                             reflowGrids();
                                             reflowPending = false;
                                         }, 100);
                                     }
                                     single(img).removeClass('img-loading').addClass('img-loaded');
                                 },
-                                onFullLoad: function() {
+                                onFullLoad: function () {
                                     $listItem.removeClass('img-loading').addClass('img-loaded');
                                 }
                             });
@@ -253,15 +257,15 @@
 
                     //function to check for ng animation
                     function ngCheckAnim() {
-                        var leavingElm = domToAry(listElms).filter(function(elm) {
+                        var leavingElm = domToAry(listElms).filter(function (elm) {
                             return single(elm).hasClass('ng-leave');
                         });
-                        return $q(function(resolve) {
+                        return $q(function (resolve) {
                             if (!leavingElm.length) {
                                 resolve();
                             } else {
-                                single(leavingElm[0]).one('webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd', function() {
-                                    $timeout(function() {
+                                single(leavingElm[0]).one('webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd', function () {
+                                    $timeout(function () {
                                         listElms = element.children();
                                         resolve();
                                     });
@@ -271,21 +275,19 @@
                     }
 
                     //watch on modal key
-                    scope.$watch(modalKey, function() {
-                        $timeout(function() {
+                    scope.$watch(modalKey, function () {
+                        $timeout(function () {
                             listElms = element.children();
-                            ngCheckAnim().then(function() {
+
+                            ngCheckAnim().then(function () {
                                 //handle images
                                 handleImage();
 
-                                $timeout(function() {
-                                    //add class to element
-                                    element.addClass('angular-grid');
+                                $timeout(function () {
 
                                     //to handle scroll appearance
                                     reflowGrids();
 
-                                    //element.addClass('angular-grid-initilized');
                                 });
                             });
                         });
@@ -293,7 +295,7 @@
 
                     //listen window resize event and reflow grids after a timeout
                     var lastDomWidth = domElm.offsetWidth;
-                    win.on('resize', function() {
+                    win.on('resize', function () {
                         var contWidth = domElm.offsetWidth;
                         if (lastDomWidth == contWidth) return;
                         lastDomWidth = contWidth;
@@ -303,7 +305,7 @@
                             $timeout.cancel(timeoutPromise);
                         }
 
-                        timeoutPromise = $timeout(function() {
+                        timeoutPromise = $timeout(function () {
                             reflowGrids();
                         }, 100);
                     });
@@ -319,7 +321,7 @@
         }
     ])
     //a factory to store angulargrid instances which can be injected to controllers or directive
-    .factory('angularGridInstance', function() {
+    .factory('angularGridInstance', function () {
 
         var angularGridInstance = {};
 
