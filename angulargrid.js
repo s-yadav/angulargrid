@@ -1,5 +1,5 @@
 /*
-    angularGrid.js v 0.3.4
+    angularGrid.js v 0.3.5
     Author: Sudhanshu Yadav
     Copyright (c) 2015 Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
     Demo on: http://ignitersworld.com/lab/angulargrid/demo1.html
