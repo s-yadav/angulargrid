@@ -313,7 +313,12 @@
                     //add instance to factory if id is assigned
                     if (agId) {
                         angularGridInstance[agId] = {
-                            refresh: reflowGrids
+                            refresh: function(){
+                                $timeout(function () {
+                                    //to handle scroll appearance
+                                    reflowGrids();
+                                });
+                            }
                         };
                     }
                 }
