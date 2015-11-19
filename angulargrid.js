@@ -275,8 +275,9 @@
                     }
 
                     //watch on modal key
-                    scope.$watch(modalKey, function () {
-                        $timeout(function () {
+                    
+                    function watch(){
+                         $timeout(function () {
                             listElms = element.children();
 
                             ngCheckAnim().then(function () {
@@ -291,7 +292,9 @@
                                 });
                             });
                         });
-                    }, true);
+                    }
+                    
+                    scope.$watch(modalKey, watch, true);
 
                     //listen window resize event and reflow grids after a timeout
                     var lastDomWidth = domElm.offsetWidth;
@@ -314,10 +317,7 @@
                     if (agId) {
                         angularGridInstance[agId] = {
                             refresh: function(){
-                                $timeout(function () {
-                                    //to handle scroll appearance
-                                    reflowGrids();
-                                });
+                                watch();
                             }
                         };
                     }
