@@ -8,7 +8,7 @@ Pinterest like responsive masonry grid system for angular
     <li>Complete responsive, figures out columns and width to completely fit the container based on options provided and container width.</li>
     <li>Animation support on enter or leave of grid items, sorting or resizing using ngAnimate module and css animation.</li>
     <li>Support any grid system (bootstrap, foundation) for number of columns, grid and gutter width.</li>
-    <li>Perfect handeling of image load. See <a href="http://ignitersworld.com/angulargrid/index.html#handeling-images">handeling images</a> for more detail. </li>
+    <li>Perfect handeling of image load.</li>
     <li>Support left to right or right to left placement of grids.</li>
     <li>Keeps a watch on list model and options to reflect the changes instantly.</li>
 </ul>
