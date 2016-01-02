@@ -11,12 +11,7 @@
         "type": "git",
         "url": "https://github.com/s-yadav/angulargrid"
     },
-    "licenses": [
-        {
-            "type": "MIT",
-            "url": "https://github.com/s-yadav/angulargrid/blob/master/MIT-LICENSE.txt"
-        }
-    ],
+    "license": "MIT",
     "bugs": {
         "url": "https://github.com/s-yadav/angulargrid/issues"
     },
