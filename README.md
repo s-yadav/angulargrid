@@ -18,6 +18,19 @@ Demo url : http://ignitersworld.com/lab/angulargrid/index.html#demo
 Documentation url : http://ignitersworld.com/lab/angulargrid/index.html#documentation
 
 ##Updates
+Release 0.5.0 (Major Enhancements) :
+1. Implemented #14 (Performant scroll)
+  - Added agPerformantScroll options, if enabled non visible element (from viewport) will be removed, and there watchers will be disabled.
+
+2. Implemented #31
+  - Added infinite scroll feature.
+
+3. agular-grid-id and angular-grid-options deprecated, use ag-id and ag-options instead.
+
+4. Added namespace "ag" on all options (ex : ag-grid-width) to avoid directive name conflict. Older options are deprecated.
+Note: This is only on templates, inside agOptions you must give options without ag namespace (ex : gridWidth);
+
+
 Release 0.4.0 (Major Enhancements) :
 
 1. Implemented #9
