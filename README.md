@@ -18,7 +18,8 @@ Demo url : http://ignitersworld.com/lab/angulargrid/index.html#demo
 Documentation url : http://ignitersworld.com/lab/angulargrid/index.html#documentation
 
 ##Updates
-Release 0.5.0 (Major Enhancements) :
+###Release 0.5.0 (Major Enhancements) :
+
 1. Implemented #14 (Performant scroll)
   - Added agPerformantScroll options, if enabled non visible element (from viewport) will be removed, and there watchers will be disabled.
 
@@ -31,7 +32,7 @@ Release 0.5.0 (Major Enhancements) :
 Note: This is only on templates, inside agOptions you must give options without ag namespace (ex : gridWidth);
 
 
-Release 0.4.0 (Major Enhancements) :
+###Release 0.4.0 (Major Enhancements) :
 
 1. Implemented #9
   - Support bootstrap or any grid system, enable cssGrid option to true, and then plugin will listen grid system (All items need to be of same grid style)
