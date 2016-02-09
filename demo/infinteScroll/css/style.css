@@ -1,13 +1,15 @@
 html {
   background: #eeeeee;
-  width: 100%;
-  height: 100%;
+
 }
 
 body {
   background: #eeeeee;
-  width: 100%;
-  height: 100%;
+
+}
+
+#content-scroller{
+  overflow: visible;
 }
 
 md-toolbar button.md-button.md-icon-button:first-child {

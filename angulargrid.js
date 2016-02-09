@@ -1,5 +1,5 @@
 /*
-    angularGrid.js v 0.5.0
+    angularGrid.js v 0.5.1
     Author: Sudhanshu Yadav
     Copyright (c) 2015 Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
     Demo on: http://ignitersworld.com/lab/angulargrid/demo1.html
@@ -92,6 +92,7 @@
             options: '=agOptions',
             agId : '@',
             pageSize: '=agPageSize',
+            performantScroll: '=agPerformantScroll',
             scrollContainer: '=agScrollContainer',
             infiniteScroll: '&agInfiniteScroll',
             infiniteScrollDistance: '=agInfiniteScrollDistance',
@@ -175,8 +176,7 @@
                 height: contElm.offsetHeight,
                 scrollHeight: contElm.scrollHeight,
                 startFrom: findPos(domElm, contElm).top,
-                $elm: container,
-                elm: contElm
+                $elm: options.scrollContainer == 'body' ? win : container
               };
             }
 
@@ -295,8 +295,9 @@
 
             //scroll event on scroll container element to refresh dom depending on scroll positions
             function scrollHandler() {
-              if (options.performantScroll) refreshDomElm(this.scrollTop);
-              if (scope.infiniteScroll) infiniteScroll(this.scrollTop);
+              var scrollTop = this.scrollTop || this.scrollY;
+              if (options.performantScroll) refreshDomElm(scrollTop);
+              if (scope.infiniteScroll) infiniteScroll(scrollTop);
             }
 
             setTimeout(function() {
@@ -624,7 +625,7 @@
                 refresh: function() {
                   watch();
                 },
-                scroll: function(scrollTop) {
+                handleScroll: function(scrollTop) {
                   if (options.performantScroll) refreshDomElm(scrollTop);
                   if (scope.infiniteScroll) infiniteScroll(scrollTop);
                 }
