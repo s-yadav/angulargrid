@@ -50,6 +50,7 @@
     angular-grid=&#x22;vm.shots&#x22;
     grid-width=&#x22;300&#x22;
     gutter-size=&#x22;12&#x22;
+
     angular-grid-id=&#x22;shots&#x22;
     infinite-scroll-container=&#x22;#content-scroller&#x22;
     infinite-scroll=&#x22;vm.loadMoreShots()&#x22;&#x3E;
@@ -66,15 +67,14 @@
         <div
              class="cards-wrap"
              angular-grid="vm.shots"
-             grid-width="300"
-             gutter-size="12"
-             angular-grid-id="shots"
-             angular-grid-options="vm.shots"
-             ag-scroll-container="'#content-scroller'"
+             ag-grid-width="300"
+             ag-performant-scroll="true"
+             ag-gutter-size="12"
+             ag-id="shots"
              ag-infinite-scroll="vm.loadMoreShots()"
              >
           <div class="card" ng-repeat="shot in vm.shots track by $index">
-            <!-- <div class="img" style="background-image: url({{::shot.images.normal}});"></div> -->
+            <div class="img" style="background-image: url({{::shot.images.normal}});"></div>
             <div class="inside">
               <h3>{{::shot.title}}</h3>
               <div class="description" ng-bind-html="::shot.description | unsafe"></div>
