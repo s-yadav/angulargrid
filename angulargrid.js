@@ -85,6 +85,7 @@
             dep_agId: '@angularGridId',
             /** deprecated options end***/
 
+            gridNo: '=agGridNo',
             gridWidth: '=agGridWidth',
             gutterSize: '=agGutterSize',
             refreshOnImgLoad: '=agRefreshOnImgLoad',
