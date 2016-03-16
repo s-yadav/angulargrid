@@ -264,7 +264,7 @@
 
               if (curPageInfo) {
                 element.children().detach();
-                filteredElm = Array.prototype.slice.call(listElms, curPageInfo.from, curPageInfo.to);
+                filteredElm = Array.prototype.slice.call(listElms, curPageInfo.from, curPageInfo.to + 1);
                 bindWatchersOnVisible(filteredElm);
                 element.append(filteredElm);
               }
