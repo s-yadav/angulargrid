@@ -1,5 +1,5 @@
 /*
-    angularGrid.js v 0.5.3
+    angularGrid.js v 0.5.4
     Author: Sudhanshu Yadav
     Copyright (c) 2015-2016 Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
     Demo on: http://ignitersworld.com/lab/angulargrid/demo1.html
@@ -28,7 +28,7 @@
   var $ = angular.element;
   var camelCaseToHyphenCase = function(str) {
     return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-  }
+  };
 
   //css for the clones
   var cloneCss = {
@@ -82,9 +82,11 @@
             dep_direction: '=direction',
             dep_cssGrid: '=cssGrid',
             dep_options: '=angularGridOptions',
+            dep_gridNo: '=gridNo',
             dep_agId: '@angularGridId',
             /** deprecated options end***/
 
+            gridNo: '=agGridNo',
             gridWidth: '=agGridWidth',
             gutterSize: '=agGutterSize',
             refreshOnImgLoad: '=agRefreshOnImgLoad',
@@ -115,7 +117,7 @@
             var options;
 
             //check deprecated options
-            ['gridWidth', 'gutterSize', 'refreshOnImgLoad', 'direction', 'options', 'cssGrid', 'agId'].forEach(function(key) {
+            ['gridWidth', 'gutterSize', 'refreshOnImgLoad', 'direction', 'options', 'cssGrid','gridNo', 'agId'].forEach(function(key) {
               var depKey = camelCaseToHyphenCase(key);
               var correctKey = 'ag-' + camelCaseToHyphenCase(key);
               if (key == 'options') depKey = "angular-grid-options";
