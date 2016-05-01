@@ -1,5 +1,5 @@
 /*
-    angularGrid.js v 0.5.4
+    angularGrid.js v 0.5.5
     Author: Sudhanshu Yadav
     Copyright (c) 2015-2016 Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
     Demo on: http://ignitersworld.com/lab/angulargrid/demo1.html
@@ -352,6 +352,7 @@
                 loadedImgPromises = [];
 
               domToAry(allImg).forEach(function(img) {
+                if(!img.src) return;
                 beforeLoad(img);
                 if (!imageLoaded(img) && !ignoreCheck(img)) {
                   loadedImgPromises.push($q(function(resolve, reject) {
