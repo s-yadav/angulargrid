@@ -7,7 +7,7 @@
     "masonry-grid",
     "responsive"
   ],
-  "main": "./ngprogress-lite.js",
+  "main": "./angulargrid.js",
   "author": {
     "name": "Sudhanshu Yadav",
     "email": "sudhanshuyadav2@gmail.com"
