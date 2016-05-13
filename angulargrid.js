@@ -1,25 +1,27 @@
 /*
-    angularGrid.js v 0.5.5
+    angularGrid.js v 0.6.0
     Author: Sudhanshu Yadav
     Copyright (c) 2015-2016 Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
-    Demo on: http://ignitersworld.com/lab/angulargrid/demo1.html
+    Demo on: http://ignitersworld.com/lab/angulargrid/
     Documentation and download on https://github.com/s-yadav/angulargrid
 */
 
 /* module to create pinterest like responsive masonry grid system for angular */
 
-(function (root, factory) {
+;(function (root, factory) {
   if (typeof module !== 'undefined' && module.exports) {
     // CommonJS
-    module.exports = factory(require('angular'));
+    module.exports = factory(require('angular'), root);
   } else if (typeof define === 'function' && define.amd) {
     // AMD
-    define(['angular'], factory);
+    define(['angular'], function (angular) {
+        return (global.PatternLock = factory(angular, root));
+    });
   } else {
     // Global Variables
-    factory(root.angular);
+    factory(root.angular, root);
   }
-}(this, function (angular, undefined) {
+}(this, function (angular, window, undefined) {
   "use strict";
 
   //defaults for plugin
