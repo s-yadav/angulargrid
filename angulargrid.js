@@ -7,9 +7,21 @@
 */
 
 /* module to create pinterest like responsive masonry grid system for angular */
-;
-(function(angular, window, undefined) {
+
+(function (root, factory) {
+  if (typeof module !== 'undefined' && module.exports) {
+    // CommonJS
+    module.exports = factory(require('angular'));
+  } else if (typeof define === 'function' && define.amd) {
+    // AMD
+    define(['angular'], factory);
+  } else {
+    // Global Variables
+    factory(root.angular);
+  }
+}(this, function (angular, undefined) {
   "use strict";
+
   //defaults for plugin
   var defaults = {
     gridWidth: 300, //minumum width of a grid, this may increase to take whole space of container
@@ -57,8 +69,6 @@
     return Array.prototype.slice.call(list);
   }
 
-
-
   //add required css
   $(document.head).append('<style>' +
     '.ag-no-transition{' +
@@ -69,7 +79,8 @@
     '.angular-grid > *{opacity : 0} ' +
     '.angular-grid > .angular-grid-item{opacity : 1}' + '</style>');
 
-  angular.module('angularGrid', []).directive('angularGrid', ['$timeout', '$window', '$q', 'angularGridInstance',
+  return angular.module('angularGrid', [])
+    .directive('angularGrid', ['$timeout', '$window', '$q', 'angularGridInstance',
       function($timeout, $window, $q, angularGridInstance) {
         return {
           restrict: 'A',
@@ -669,6 +680,7 @@
 
       return angularGridInstance;
 
-    });
+    })
+    .name;
 
-}(angular, window));
+}));
