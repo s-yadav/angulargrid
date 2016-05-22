@@ -21,6 +21,11 @@ Documentation url : http://ignitersworld.com/lab/angulargrid/index.html#document
 ###Release 0.6.0 :
 UMD Support Added
 
+Released on npm 
+```js 
+npm install angulargrid --save
+```
+
 ###Release 0.5.0 (Major Enhancements) :
 
 1. Implemented #14 (Performant scroll)
