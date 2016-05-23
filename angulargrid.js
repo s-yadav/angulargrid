@@ -327,7 +327,7 @@
               var contWidth = domElm.offsetWidth,
                 clone; // a clone to calculate width without transition
 
-              if (options.cssGrid) {
+              if (options.cssGrid && listElms[0]) {
                 clone = $(listElms[0]).clone();
                 clone.css(cloneCss).addClass('ag-no-transition ag-clone');
 
