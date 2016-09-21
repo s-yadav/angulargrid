@@ -1,5 +1,5 @@
 /*
-    angularGrid.js v 0.6.0
+    angularGrid.js v 0.6.1
     Author: Sudhanshu Yadav
     Copyright (c) 2015-2016 Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
     Demo on: http://ignitersworld.com/lab/angulargrid/
@@ -15,7 +15,7 @@
   } else if (typeof define === 'function' && define.amd) {
     // AMD
     define(['angular'], function (angular) {
-        return (global.PatternLock = factory(angular, root));
+        return factory(angular, root);
     });
   } else {
     // Global Variables
