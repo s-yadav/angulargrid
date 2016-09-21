@@ -109,7 +109,7 @@
             agId: '@',
             pageSize: '=agPageSize',
             performantScroll: '=agPerformantScroll',
-            scrollContainer: '=agScrollContainer',
+            scrollContainer: '@agScrollContainer',
             infiniteScroll: '&agInfiniteScroll',
             infiniteScrollDistance: '=agInfiniteScrollDistance',
             infiniteScrollDelay: '=agInfiniteScrollDelay'
