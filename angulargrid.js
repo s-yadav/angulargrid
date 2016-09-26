@@ -1,5 +1,5 @@
 /*
-    angularGrid.js v 0.6.1
+    angularGrid.js v 0.6.2
     Author: Sudhanshu Yadav
     Copyright (c) 2015-2016 Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
     Demo on: http://ignitersworld.com/lab/angulargrid/
@@ -392,6 +392,9 @@
 
             //function to reflow grids
             function reflowGrids() {
+              //return if there are no elements
+              if(!(listElms && listElms.length )) return;
+
               reflowCount++;
 
               //claclulate width of all element
