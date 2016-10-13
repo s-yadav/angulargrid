@@ -455,7 +455,10 @@
                   },
                   onFullLoad: function() {
                     //if its older reflow don't do any thing
-                    if (reflowIndx < reflowCount) return;
+                    if (reflowIndx < reflowCount) {
+                      clones.remove();
+                      return;
+                    }
 
                     var listElmHeights = [],
                       listElmPosInfo = [],

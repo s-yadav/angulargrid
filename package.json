@@ -1,6 +1,6 @@
 {
   "name": "angulargrid",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Pinterest like responsive masonry grid system for angular.",
   "keywords": [
     "angular-grid",
