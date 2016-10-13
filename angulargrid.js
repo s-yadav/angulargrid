@@ -337,7 +337,7 @@
                 clone.remove();
 
                 return {
-                  no: Math.floor((contWidth + 12) / width),
+                  no: width ? Math.floor((contWidth + 12) / width) : 0,
                   width: width
                 };
               }
@@ -402,6 +402,8 @@
                 colWidth = colInfo.width,
                 cols = colInfo.no,
                 i;
+
+              if (!cols) return;
 
               //initialize listRowBottom
               var lastRowBottom = [];
