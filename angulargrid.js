@@ -591,12 +591,22 @@
                 if (!leavingElm.length) {
                   resolve();
                 } else {
-                  single(leavingElm[0]).one('webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd', function() {
-                    $timeout(function() {
-                      listElms = getListElms();
-                      resolve();
+                    var eventFired = false;
+                    single(leavingElm[0]).one('webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd', function () {
+                        var eventFired = true;
+                        $timeout(function () {
+                            listElms = getListElms();
+                            resolve();
+                        });
                     });
-                  });
+                    if (!eventFired) {
+                        single(leavingElm[0]).one("remove", function () {
+                            $timeout(function () {
+                                listElms = getListElms();
+                                resolve();
+                            });
+                        });
+                    }
                 }
               });
             }
