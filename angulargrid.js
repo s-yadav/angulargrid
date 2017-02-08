@@ -1,5 +1,5 @@
 /*
-    angularGrid.js v 0.6.4
+    angularGrid.js v 0.6.5
     Author: Sudhanshu Yadav
     Copyright (c) 2015-2016 Sudhanshu Yadav - ignitersworld.com , released under the MIT license.
     Demo on: http://ignitersworld.com/lab/angulargrid/
@@ -188,11 +188,13 @@
               var container = $(document.querySelector(options.scrollContainer)),
                 contElm = container[0];
 
+              var $elm = options.scrollContainer === 'body' ? win : container;
+
               return {
-                height: contElm.offsetHeight,
+                height: $elm[0].innerHeight || $elm[0].offsetHeight,
                 scrollHeight: contElm.scrollHeight,
                 startFrom: findPos(domElm, contElm).top,
-                $elm: options.scrollContainer == 'body' ? win : container
+                $elm: $elm
               };
             }
 
