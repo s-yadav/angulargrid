@@ -45,7 +45,6 @@ import { Component, OnInit } from '@angular/core';
             <img src="{{pic.media.m}}" class="grid-img" attr.data-actual-width = "{{pic.actualWidth}}"  attr.data-actual-height="{{pic.actualHeight}}" />
         </li>
     </ul>
-    <
   `,
 })
 export class Flickr implements OnInit{
