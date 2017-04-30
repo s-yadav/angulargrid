@@ -49,7 +49,7 @@ import { Component, OnInit } from '@angular/core';
   `,
 })
 export class Flickr implements OnInit{
-  constructor(private flickrService: FlickrService) {    
+  constructor(private flickrService: FlickrService) {
   }
   pics:any = [];
   loadMore = ()=> {
@@ -62,10 +62,10 @@ export class Flickr implements OnInit{
           obj.actualHeight  = height;
           obj.actualWidth = width;
       });
-      this.pics = [...this.pics,...data.items];
+      this.pics = [...this.pics, ...data.items];
     },(error:any)=> {
       console.log(error);
-    }) 
+    })
   }
   ngOnInit() {
     this.flickrService.getData().subscribe((data:any)=> {
@@ -80,6 +80,6 @@ export class Flickr implements OnInit{
       console.log(this.pics);
     },(error:any)=> {
       console.log(error);
-    }) 
+    })
   }
 }

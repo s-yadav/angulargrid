@@ -58,6 +58,12 @@ export class InfiniteScrollDirective {
         // }
         ele.className = ele.className.replace(cls,'').trim();
     }
+    private removeChild(ele:any) {
+      const childrens = Array.from(ele.children || []);
+      childrens.forEach((child) => {
+        ele.removeChild(child);
+      });
+    }
     private findElements(container:any, selector:string) {
         if(!container.length) container = [container];
         container = Array.from(container);
@@ -100,13 +106,13 @@ export class InfiniteScrollDirective {
         .ag-no-transition {
             -webkit-transition: none !important;
             transition: none !important;
-        } 
+        }
         .angular-grid{
             position : relative;
-        } 
+        }
         .angular-grid > *{
             opacity : 0
-        } 
+        }
         .angular-grid > .angular-grid-item{
             opacity : 1
         }
@@ -140,7 +146,7 @@ export class InfiniteScrollDirective {
     getScrollContainerInfo() {
         let container = document.querySelector(this.scrollContainer);
         let effectiveContainer = this.scrollContainer == 'body' ? window : container;
-    
+
         return {
             height: effectiveContainer.offsetHeight || effectiveContainer.innerHeight,
             scrollHeight: container.scrollHeight,
@@ -201,7 +207,7 @@ export class InfiniteScrollDirective {
         var curPageInfo = this.scrollNs.pageInfo[currentPage];
 
         if (curPageInfo) {
-            this.element.innerHTML = ""
+            this.removeChild(this.element);
             filteredElm = Array.prototype.slice.call(this.listElms, curPageInfo.from, curPageInfo.to + 1);
             this.appendChild(this.element, filteredElm);
         }
@@ -232,7 +238,7 @@ export class InfiniteScrollDirective {
         if (this.cssGrid) {
             clone = this.cloneNode(this.listElms[0]);
             //clone.css(cloneCss).addClass('ag-no-transition ag-clone');
-    
+
             //this.element.innerHTML +=clone.innerHTML;
             this.element.appendChild(clone);
             let width = clone.offsetWidth;
@@ -290,7 +296,7 @@ export class InfiniteScrollDirective {
                     count +=1;
                     if(count == loadedImgPromises.length) {
                         onFullLoad();
-                    } 
+                    }
                 });
             })
             /*Observable.forkJoin(loadedImgPromises)
@@ -348,7 +354,7 @@ export class InfiniteScrollDirective {
 
         //get all list items new height
         let clones:Array<any> = this.cloneNode(this.listElms);
-        
+
         clones.forEach((clone:any)=> {
             //clone.className += ' ag-no-transition ag-clone';
             this.addClass(clone, 'ag-no-transition');
@@ -361,7 +367,7 @@ export class InfiniteScrollDirective {
         });
         //var clonesCssObj = angular.extend({}, cloneCss);
         //clonesCssObj.width = colWidth + 'px';
-        
+
         /*clones.css(clonesCssObj);
         element.append(clones);*/
 
@@ -382,44 +388,44 @@ export class InfiniteScrollDirective {
                             });
                             return;
                         }
-            
+
                         let listElmHeights:Array<any> = [],
                             listElmPosInfo:Array<any> = [],
                             item:any, i:any, ln:any;
-            
-            
-            
+
+
+
                         //find height with clones
                         for (i = 0, ln = clones.length; i < ln; i++) {
                             listElmHeights.push(clones[i].offsetHeight);
                         }
-            
+
                         //set new positions
                         for (i = 0, ln = this.listElms.length; i < ln; i++) {
                             item = this.listElms[i];
                             let height = listElmHeights[i],
                             top = Math.min.apply(Math, lastRowBottom),
                             col = lastRowBottom.indexOf(top);
-            
+
                             //update lastRowBottom value
                             lastRowBottom[col] = top + height + this.gutterSize;
-            
+
                             //set top and left of list items
                             var posX = col * (colWidth + this.gutterSize);
-            
+
                             let cssObj:any = {
                                 position: 'absolute',
                                 top: top + 'px'
                             };
-            
+
                             if (this.direction == 'rtol') {
                                 cssObj.right = posX + 'px';
                             } else {
                                 cssObj.left = posX + 'px';
                             }
-            
+
                             cssObj.width = colWidth + 'px';
-            
+
                             //add position info of each grids
                             listElmPosInfo.push({
                                 top: top,
@@ -431,11 +437,11 @@ export class InfiniteScrollDirective {
                             //item.className += ' angular-grid-item';
                             this.addClass(item, 'angular-grid-item')
                         }
-            
+
                         //set the height of container
                         var contHeight = Math.max.apply(Math, lastRowBottom);
                         this.element.style.height = contHeight + 'px';
-            
+
                         clones.forEach((clone)=> {
                             if(clone.parentNode)
                                 clone.parentNode.removeChild(clone);
@@ -444,7 +450,7 @@ export class InfiniteScrollDirective {
                         if (this.performantScroll || this.infiniteScroll) {
                             this.scrollNs.scrollContInfo = this.getScrollContainerInfo();
                         }
-            
+
                         //if performantScroll is enabled calculate the page info, and reflect dom elements to reflect visible pages
                         if (this.performantScroll) {
                             this.scrollNs.lastPage = null;
@@ -452,7 +458,7 @@ export class InfiniteScrollDirective {
                             this.scrollNs.isBusy = false;
                             this.refreshDomElm(this.scrollNs.lastScrollPosition || 0);
                         }
-            
+
                         //re enable infiniteScroll
                         this.reEnableInfiniteScroll();
                     }
@@ -470,7 +476,7 @@ export class InfiniteScrollDirective {
             //add image loading class on list item
             //listItem.className += ' img-loading';
             this.addClass(listItem, 'img-loading');
-    
+
             this.afterImageLoad(listItem, {
                 beforeLoad: (img:any)=> {
                     //img.className += ' img-loading';
@@ -503,9 +509,6 @@ export class InfiniteScrollDirective {
         });
     }
     private getListElms() {
-        console.log(this.domToAry(this.element.childNodes).filter((elm:any)=> {
-            return (elm.className && !(elm.className.indexOf('ag-clone') > -1));
-        }));
         return this.domToAry(this.element.childNodes).filter((elm:any)=> {
             return (elm.className && !(elm.className.indexOf('ag-clone') > -1));
         })
@@ -514,11 +517,12 @@ export class InfiniteScrollDirective {
         console.log(this.ng2Grid);
         this.scrollNs.isBusy = true;
         setTimeout(()=> {
+            const __this = this;
             this.listElms = this.getListElms();
             this.handleImage();
             setTimeout(()=> {
-                this.reflowGrids();
-            },0);
+              this.reflowGrids();
+            }, 0);
             /*ngCheckAnim().then(function() {
                 //handle images
                 handleImage();
@@ -541,7 +545,7 @@ export class InfiniteScrollDirective {
 
         this.timeoutPromise = setTimeout(()=> {
             if (this.performantScroll) {
-                this.element.innerHTML = "";
+                this.removeChild(this.element);
                 this.appendChild(this.element,this.listElms);
             }
             this.reflowGrids();
