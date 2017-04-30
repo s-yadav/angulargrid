@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Angular Grid With Infinite Scroll</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+
+
+    <link rel="stylesheet" href="css/normalize.css">
+
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.4/angular-material.css'>
+
+        <link rel="stylesheet" href="css/style.css">
+
+
+
+
+  </head>
+
+  <body>
+
+        <div ng-controller="MainCtrl as vm" ng-cloak="" ng-app="app" layout="column" layout-fill>
+  <md-toolbar class="md-whiteframe-z2">
+    <div class="md-toolbar-tools">
+      <button class="md-button md-icon-button">
+        <md-icon>
+          <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+          </svg>
+        </md-icon>
+      </button>
+      <h2>
+        <span>Angular Grid with Infinite Scroll</span>
+      </h2>
+    </div>
+  </md-toolbar>
+
+  <md-content id="content-scroller">
+    <div id="summary">
+      <h3>Description</h3>
+      <p>Executes method on the controller when the user approaches the bottom of the page as they scroll.</p>
+      <h3>Usage</h3>
+      <p>Add the <code>infinite-scroll</code> attribute to the element that you have applied <code>angular-grid</code> to specifying the method on your controller to execute as the user approaches the bottom of the angular grid. If angular grid is being scrolled within a div set to overflow scroll or auto, add the <code>infinite-scroll-container</code> attribute specifying the selector of the element being scrolled. </p>
+      <h3>Example</h3>
+      <pre>
+&#x3C;md-content id=&#x22;content-scroller&#x22;&#x3E;
+  &#x3C;div
+    class=&#x22;cards-wrap&#x22;
+    angular-grid=&#x22;vm.shots&#x22;
+    grid-width=&#x22;300&#x22;
+    gutter-size=&#x22;12&#x22;
+
+    angular-grid-id=&#x22;shots&#x22;
+    infinite-scroll-container=&#x22;#content-scroller&#x22;
+    infinite-scroll=&#x22;vm.loadMoreShots()&#x22;&#x3E;
+    &#x3C;div class=&#x22;card&#x22; ng-repeat=&#x22;shot in vm.shots track by shot.id&#x22;&#x3E;
+      [...]
+    &#x3C;/div&#x3E;
+  &#x3C;/div&#x3E;
+&#x3C;/md-content&#x3E;
+      </pre>
+      <h3>Demo</h3>
+
+    </div>
+    <div>
+        <div
+             class="cards-wrap"
+             angular-grid="vm.shots"
+             ag-grid-width="300"
+             ag-gutter-size="12"
+             ag-id="shots"
+             ag-infinite-scroll="vm.loadMoreShots()"
+             >
+          <div class="card" ng-repeat="shot in vm.shots track by $index">
+            <div class="img" style="background-image: url({{::shot.images.normal}});"></div>
+            <div class="inside">
+              <h3>{{::shot.title}}</h3>
+              <div class="description" ng-bind-html="::shot.description | unsafe"></div>
+            </div>
+          </div>
+        </div>
+        <div class="loading-more-indicator" ng-show="vm.loadingMore">
+          <md-progress-circular md-mode="indeterminate" md-diameter="64" class="progress-swatch"></md-progress-circular>
+        </div>
+    </div>
+  </md-content>
+
+</div>
+
+    <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.js'></script>
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-animate.min.js'></script>
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-route.min.js'></script>
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-aria.min.js'></script>
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-messages.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.4/angular-material.js'></script>
+<script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/assets-cache.js'></script>
+<script src='https://cdn.rawgit.com/sroze/ngInfiniteScroll/master/build/ng-infinite-scroll.js'></script>
+<script>
+(function() {var a = document.createElement("script");a.src = "https://rawgit.com/kentcdodds/ng-stats/master/dist/ng-stats.js";a.onload=function(){window.showAngularStats({position: 'topright'})};document.head.appendChild(a)})();
+</script>
+<script src='../../angulargrid.js'></script>
+
+        <script src="js/index.js"></script>
+
+
+
+
+  </body>
+</html>
