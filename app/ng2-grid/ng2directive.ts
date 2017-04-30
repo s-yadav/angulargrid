@@ -52,17 +52,17 @@ export class InfiniteScrollDirective {
         }
     }
     private removeClass(ele:any,cls:string) {
-        // if (this.hasClass(ele,cls)) {
-        //     var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
-        //     ele.className=ele.className.replace(reg,' ');
-        // }
         ele.className = ele.className.replace(cls,'').trim();
     }
     private removeChild(ele:any) {
-      const childrens = Array.from(ele.children || []);
-      childrens.forEach((child) => {
+      const children = Array.from(ele.children || []);
+      children.forEach((child) => {
         ele.removeChild(child);
       });
+    }
+    private replaceChildren(elm:any, children:any) {
+      this.removeChild(elm);
+      this.appendChild(elm,children);
     }
     private findElements(container:any, selector:string) {
         if(!container.length) container = [container];
@@ -207,9 +207,8 @@ export class InfiniteScrollDirective {
         var curPageInfo = this.scrollNs.pageInfo[currentPage];
 
         if (curPageInfo) {
-            this.removeChild(this.element);
             filteredElm = Array.prototype.slice.call(this.listElms, curPageInfo.from, curPageInfo.to + 1);
-            this.appendChild(this.element, filteredElm);
+            this.replaceChildren(this.element, filteredElm);
         }
     }
     private reEnableInfiniteScroll = () => {
@@ -516,6 +515,7 @@ export class InfiniteScrollDirective {
     watch() {
         console.log(this.ng2Grid);
         this.scrollNs.isBusy = true;
+
         setTimeout(()=> {
             const __this = this;
             this.listElms = this.getListElms();
@@ -545,8 +545,7 @@ export class InfiniteScrollDirective {
 
         this.timeoutPromise = setTimeout(()=> {
             if (this.performantScroll) {
-                this.removeChild(this.element);
-                this.appendChild(this.element,this.listElms);
+                this.replaceChildren(this.element,this.listElms);
             }
             this.reflowGrids();
         }, 100);
@@ -559,19 +558,23 @@ export class InfiniteScrollDirective {
         //this.element.className += ' angular-grid'
         this.addClass(this.element, 'angular-grid')
         this.getOptions();
+
+        //reset removed elements
+        if (this.listElms) {
+          this.replaceChildren(this.element, this.listElms);
+        }
+
         setTimeout(() => {
             const {$elm} = this.getScrollContainerInfo();
             $elm.addEventListener('scroll', this.scrollHandler.bind(this, $elm));
         }, 0);
+
         this.watch();
     }
     ngOnChanges() {
         let self = this;
-        console.log(this);
-        console.log(this.element);
-        console.log(this.ng2Grid);
+
         this.startRendering();
         window.onresize = self.windowResizeCallback.bind(self);
-        //window.addEventListener('resize', self.windowResizeCallback(), false);
     }
 }
