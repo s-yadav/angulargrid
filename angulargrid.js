@@ -37,6 +37,7 @@
     scrollContainer: 'body',
     infiniteScrollDelay: 3000,
     infiniteScrollDistance: 100,
+    reflowedCB: '=agReflowed'
   };
 
   var $ = angular.element;
@@ -531,6 +532,8 @@
 
                     //re enable infiniteScroll
                     reEnableInfiniteScroll();
+
+                    if (typeof options.reflowedCB === 'function') options.reflowedCB();
                   }
                 });
               }(reflowCount));
