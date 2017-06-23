@@ -37,7 +37,6 @@
     scrollContainer: 'body',
     infiniteScrollDelay: 3000,
     infiniteScrollDistance: 100,
-    reflowedCB: '=agReflowed'
   };
 
   var $ = angular.element;
@@ -113,7 +112,8 @@
             scrollContainer: '@agScrollContainer',
             infiniteScroll: '&agInfiniteScroll',
             infiniteScrollDistance: '=agInfiniteScrollDistance',
-            infiniteScrollDelay: '=agInfiniteScrollDelay'
+            infiniteScrollDelay: '=agInfiniteScrollDelay',
+            reflowedCB: '&agReflowed'
           },
           link: function(scope, element, attrs) {
             var domElm = element[0],
@@ -533,7 +533,12 @@
                     //re enable infiniteScroll
                     reEnableInfiniteScroll();
 
-                    if (typeof options.reflowedCB === 'function') options.reflowedCB();
+                    scope.reflowedCB({
+                      $event: {
+                        id: scope.agId || null
+                      }
+                    });
+
                   }
                 });
               }(reflowCount));
