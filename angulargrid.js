@@ -299,7 +299,11 @@
             }
 
             function infiniteScroll(scrollTop) {
-              if (scrollNs.isLoading || !scope.model.length) return;
+              if (scope.model) {
+                var typeofModel = typeof scope.model;
+                if ((!scope.model.length && typeofModel == "object") || (!scope.model && typeofModel == "number")) return;
+              }
+              if (scrollNs.isLoading) return;
               var scrollHeight = scrollNs.scrollContInfo.scrollHeight,
                 contHeight = scrollNs.scrollContInfo.height;
 
