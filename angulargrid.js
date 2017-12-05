@@ -370,13 +370,13 @@
                 if(!img.src) return;
                 beforeLoad(img);
                 if (!imageLoaded(img) && !ignoreCheck(img)) {
-                  loadedImgPromises.push($q(function(resolve, reject) {
+            		  var deferred = $q.defer();            		  
                     img.onload = function() {
                       onLoad(img);
-                      resolve();
+        				  deferred.resolve();
                     };
-                    img.onerror = reject;
-                  }));
+        			  img.onerror = deferred.reject;            		  
+            		  loadedImgPromises.push(deferred.promise);
                 } else {
                   isLoaded(img);
                 }
@@ -586,22 +586,22 @@
 
             //function to check for ng animation
             function ngCheckAnim() {
-              var leavingElm = domToAry(listElms).filter(function(elm) {
-                return single(elm).hasClass('ng-leave');
-              });
-              return $q(function(resolve) {
-                if (!leavingElm.length) {
-                  resolve();
-                } else {
-                  single(leavingElm[0]).one('webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd', function() {
-                    $timeout(function() {
-                      listElms = getListElms();
-                      resolve();
-                    });
-                  });
-                }
-              });
-            }
+            	var leavingElm = domToAry(listElms).filter(function(elm) {
+            		return single(elm).hasClass('ng-leave');
+            	});            	
+            	var deferred = $q.defer();
+            	if (!leavingElm.length) {
+            		deferred.resolve();
+            	} else {
+            		single(leavingElm[0]).one('webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd', function() {
+            			$timeout(function() {
+            				listElms = getListElms();
+            				deferred.resolve();
+            			});
+            		});
+            	}            
+            	return deferred.promise;
+              }
 
             //watch on modal key
 
