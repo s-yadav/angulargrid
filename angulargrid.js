@@ -478,41 +478,49 @@
                     //set new positions
                     for (i = 0, ln = listElms.length; i < ln; i++) {
                       item = single(listElms[i]);
-                      var height = listElmHeights[i],
-                        top = Math.min.apply(Math, lastRowBottom),
-                        col = lastRowBottom.indexOf(top);
-
-                      //update lastRowBottom value
-                      lastRowBottom[col] = top + height + options.gutterSize;
-
-                      //set top and left of list items
-                      var posX = col * (colWidth + options.gutterSize);
-
                       var cssObj = {
-                        position: 'absolute',
-                        top: top + 'px'
+                        left: null,
+                        position: null,
+                        right: null,
+                        top: null,
+                        width: null,
                       };
+                      if (cols > 1) {
+                        var height = listElmHeights[i],
+                          top = Math.min.apply(Math, lastRowBottom),
+                          col = lastRowBottom.indexOf(top);
 
-                      if (options.direction == 'rtol') {
-                        cssObj.right = posX + 'px';
-                      } else {
-                        cssObj.left = posX + 'px';
+                        //update lastRowBottom value
+                        lastRowBottom[col] = top + height + options.gutterSize;
+
+                        //set top and left of list items
+                        var posX = col * (colWidth + options.gutterSize);
+
+                        cssObj.position = 'absolute';
+                        cssObj.top = top + 'px';
+
+                        if (options.direction == 'rtol') {
+                          cssObj.right = posX + 'px';
+                        } else {
+                          cssObj.left = posX + 'px';
+                        }
+
+                        cssObj.width = colWidth + 'px';
+
+                        //add position info of each grids
+                        listElmPosInfo.push({
+                          top: top,
+                          bottom: top + height
+                        });
                       }
-
-                      cssObj.width = colWidth + 'px';
-
-                      //add position info of each grids
-                      listElmPosInfo.push({
-                        top: top,
-                        bottom: top + height
-                      });
-
                       item.css(cssObj).addClass('angular-grid-item');
                     }
 
                     //set the height of container
-                    var contHeight = Math.max.apply(Math, lastRowBottom);
-                    element.css('height', contHeight + 'px');
+                    var contHeight = Math.max.apply(Math, lastRowBottom),
+                        setHeight = cols > 1 ? contHeight + 'px' : null;
+
+                    element.css('height', setHeight);
 
                     clones.remove();
 
