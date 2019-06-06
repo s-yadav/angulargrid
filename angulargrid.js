@@ -23,7 +23,6 @@
   }
 }(this, function (angular, window, undefined) {
   "use strict";
-
   //defaults for plugin
   var defaults = {
     gridWidth: 300, //minumum width of a grid, this may increase to take whole space of container
@@ -113,7 +112,8 @@
             infiniteScroll: '&agInfiniteScroll',
             infiniteScrollDistance: '=agInfiniteScrollDistance',
             infiniteScrollDelay: '=agInfiniteScrollDelay',
-            callback: '=agCallback'
+            agCallback: '&',
+            agKiosk: '<'
           },
           link: function(scope, element, attrs) {
             var domElm = element[0],
@@ -382,10 +382,9 @@
                   isLoaded(img);
                 }
               });
-
               if (loadedImgPromises.length) {
                 $q.all(loadedImgPromises).then(onFullLoad, onFullLoad);
-              } else {
+              } else if (!scope.agKiosk) {
                 setTimeout(function() {
                   onFullLoad();
                 }, 0);
@@ -540,8 +539,7 @@
 
                     //re enable infiniteScroll
                     reEnableInfiniteScroll();
-
-                    if (typeof options.callback === 'function') options.callback();
+                    if (typeof scope.agCallback === 'function') scope.agCallback();
                   }
                 });
               }(reflowCount));
