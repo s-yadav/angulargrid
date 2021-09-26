@@ -112,7 +112,8 @@
             scrollContainer: '@agScrollContainer',
             infiniteScroll: '&agInfiniteScroll',
             infiniteScrollDistance: '=agInfiniteScrollDistance',
-            infiniteScrollDelay: '=agInfiniteScrollDelay'
+            infiniteScrollDelay: '=agInfiniteScrollDelay',
+            reflowedCB: '&agReflowed'
           },
           link: function(scope, element, attrs) {
             var domElm = element[0],
@@ -531,6 +532,13 @@
 
                     //re enable infiniteScroll
                     reEnableInfiniteScroll();
+
+                    scope.reflowedCB({
+                      $event: {
+                        id: scope.agId || null
+                      }
+                    });
+
                   }
                 });
               }(reflowCount));
