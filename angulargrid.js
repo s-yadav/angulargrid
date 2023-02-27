@@ -5,7 +5,7 @@
     Demo on: http://ignitersworld.com/lab/angulargrid/
     Documentation and download on https://github.com/s-yadav/angulargrid
 */
-
+ 
 /* module to create pinterest like responsive masonry grid system for angular */
 
 ;(function (root, factory) {

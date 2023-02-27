@@ -1,0 +1,3 @@
+# Linguist
+examples/**/* linguist-vendored
+angulargrid.js linguist-vendored=false
